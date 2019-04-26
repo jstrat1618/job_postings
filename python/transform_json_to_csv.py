@@ -1,9 +1,6 @@
 import os
 import json
-import collections
 import pandas as pd
-
-Job = collections.namedtuple("Job", ['id', 'title', 'link', 'location', 'summary'])
 
 
 def load_data():
@@ -19,7 +16,6 @@ def transform_data(data):
 
     df = pd.DataFrame.from_dict(data, orient='index',
                                 columns=['id', 'title', 'link', 'location', 'summary'])
-
 
     df.to_csv('../venv/2019_04_25_jobs.csv', index=False)
 
