@@ -15,45 +15,22 @@ def load_data():
     return data
 
 
-def process_data(data):
+def transform_data(data):
 
-    dat = {}
-
-    for key,val in data.items():
-        id,title,link,location,summary = val
-        dat['key'] = Job(id=id, title=title, link=link, location=location,summary=summary)
-
-    return dat
+    df = pd.DataFrame.from_dict(data, orient='index',
+                                columns=['id', 'title', 'link', 'location', 'summary'])
 
 
-def transform_to_csv(processed_data):
-
-    id,title,link,location,summary = [],[],[],[],[]
-
-    for key,val in processed_data.items():
-        id.append(key)
-        title.append(val.title)
-        link.append(val.link)
-        location.append(val.location)
-        summary.append(summary)
-
-    df = pd.DataFrame({'id':id, 'title':title, 'link':link, 'location':location, 'summary':summary})
-
-    df.to_csv('../venv/2019_04_25_jobs.csv')
-
-
+    df.to_csv('../venv/2019_04_25_jobs.csv', index=False)
 
 
 
 def main():
     data = load_data()
 
-    dat = process_data(data)
+    transform_data(data)
 
-    transform_to_csv(dat)
-
-    print("Procssed Finished.")
-    print("Goodbye!")
+    print("Goodbye")
 
 
 if __name__ == '__main__':
