@@ -17,7 +17,7 @@ def transform_data(data):
     df = pd.DataFrame.from_dict(data, orient='index',
                                 columns=['id', 'title', 'link', 'location', 'summary'])
 
-    df.to_csv('../venv/2019_04_25_jobs.csv', index=False)
+    df.to_csv('../venv/data/2019_04_25_jobs.csv', index=False)
 
 
 
