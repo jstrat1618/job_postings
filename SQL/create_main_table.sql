@@ -1,0 +1,3 @@
+CREATE TABLE main_jobs(id CHARACTER PRIMARY KEY, 
+title CHARACTER, link CHARACTER, 
+location CHARACTER, summary CHARACTER);

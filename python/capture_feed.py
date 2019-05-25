@@ -17,13 +17,13 @@ def parse_feed(url = 'https://stackoverflow.com/jobs/feed'):
     return rss_feed
 
 
+
 def parse_entries(feed):
     entries = feed['entries']
 
     print(len(entries))
 
     data = {}
-    num_excpt = 0
 
     for entry in entries:
 
