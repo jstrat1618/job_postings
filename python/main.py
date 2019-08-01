@@ -96,9 +96,6 @@ def commit_data(data2commit):
     conn.close()
 
 
-
-
-
 def main():
     old_data = load_old_data()
 
@@ -115,8 +112,6 @@ def main():
 
     print("Committed {} rows".format(df2commit.shape[0]))
     print("Finished")
-
-
 
 
 if __name__ == '__main__':
