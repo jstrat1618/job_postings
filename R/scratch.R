@@ -80,8 +80,8 @@ dat %>%
          title='Most Common Words in Job Description')+
     coord_flip()
 
-
-wmat <-
+# Cluster Words
+dtm <- 
   dat %>%
   select(id, summary) %>%
   mutate(summary = gsub('<.*?>', '', summary)) %>%
@@ -89,6 +89,7 @@ wmat <-
   anti_join(tidytext::stop_words, by='word') %>%
   filter(!word  %in% c('nbsp', 'rsquo')) %>%
   count(id, word) %>%
-  tidytext::cast_tdm(document = id, value=word, n)
-    
-  
+  cast_dtm(term = word, document =id, value = n)
+
+
+
