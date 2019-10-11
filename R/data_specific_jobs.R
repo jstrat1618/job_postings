@@ -83,8 +83,19 @@ pca_df <-
 
 pca_df %>%
   #Some Extreme outliers appear to cluster the data
-  filter(PC1 > -30 & PC1 <30 & PC2 >-10) %>%
+  filter(abs(PC1) < mean(PC1) + 2*sd(PC1) & abs(PC2) < mean(PC2) + 2*sd(PC2)) %>%
   ggplot(aes(PC1, PC2))+
   geom_point()
 
 
+num_clust <- 2:15
+wss <- numeric()
+
+for(i in num_clust){
+  fit <- kmeans(pca_df, centers = i)
+}
+
+wss <- c(fit$totss, wss)
+num_clust <- 1:15
+
+plot(num_clust, wss)
