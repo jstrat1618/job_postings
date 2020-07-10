@@ -110,7 +110,7 @@ def main():
     commit_data(df2commit)
 
 
-    print("Committed {} rows".format(df2commit.shape[0]))
+    print("Committed {}  rows".format(df2commit.shape[0]))
     print("Finished")
 
 
