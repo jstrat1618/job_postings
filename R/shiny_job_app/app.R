@@ -9,22 +9,22 @@ library(shiny)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Stackoverflow Jobs"),
+    titlePanel("Jobs Posted on Stackoverflow"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
+            sliderInput("num_rows",
                         "Number of bins:",
                         min = 1,
-                        max = 50,
-                        value = 30)
+                        max = 25,
+                        value = 13)
         ),
 
         # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
+        
+        tabPanel("main_df", tableOutput("main_df"))
+        #mainPanel()
     )
 )
 
@@ -48,15 +48,14 @@ server <- function(input, output) {
     dat$pulled <- as.Date(dat$pulled, format = '%m/%d/%Y')
     
 
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
-    
+    output$main_df <- renderTable(
+    dat %>% 
+        dplyr::select(title, link, location, pulled) %>%
+        rename(Title = title,
+               Location = location, 
+               `Date Pulled` = pulled) %>%
+       head(input$num_rows)
+    )
     
     
 }
