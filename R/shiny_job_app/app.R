@@ -57,8 +57,11 @@ ui <- shinyUI(
                                          min = 2,
                                          max = 25,
                                          value = 10),
+                             h4("Compare Words (not case sensetive)"),
                              textInput("word1", label="Enter Word"),
-                             textInput("word2", label="Enter Word")),
+                             textInput("word2", label="Enter Word"),
+                             textInput("word3", label="Enter Word"),
+                             textInput("word4", label="Enter Word")),
                          mainPanel(plotOutput("word_sum_plt"))))
     )
 )
@@ -168,7 +171,7 @@ server <- function(input, output) {
                  title='Most Common Words in Job Description')+
             coord_flip()
         
-       words <- tolower(c(input$word1, input$word2))
+       words <- tolower(c(input$word1, input$word2, input$word3,input$word4))
       
         if(input$word1 == '' | input$word2 == ''){
             print(word_plt)
