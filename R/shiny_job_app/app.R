@@ -56,7 +56,9 @@ ui <- shinyUI(
                                          "Number of Words",
                                          min = 2,
                                          max = 25,
-                                         value = 10)),
+                                         value = 10),
+                             textInput("word1", label="Enter Word"),
+                             textInput("word2", label="Enter Word")),
                          mainPanel(plotOutput("word_sum_plt"))))
     )
 )
@@ -166,9 +168,25 @@ server <- function(input, output) {
                  title='Most Common Words in Job Description')+
             coord_flip()
         
+       words <- tolower(c(input$word1, input$word2))
+      
+        if(input$word1 == '' | input$word2 == ''){
+            print(word_plt)
+        }else{
+            plt_comp <- 
+                word_df %>%
+                filter(word %in% words) %>%
+                ggplot(aes(reorder(word, n), n))+
+                geom_bar(stat = 'identity')+
+                labs(x="", y="Number of Times Used", 
+                     title=paste(input$word1, "and", input$word2))+
+                coord_flip()
+            
+            plt <- gridExtra::grid.arrange(word_plt, plt_comp, nrow=2)
+            
+            print(plt)
+        }
         
-
-        print(word_plt)
     })
     
     
