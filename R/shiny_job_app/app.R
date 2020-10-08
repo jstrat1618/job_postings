@@ -114,6 +114,8 @@ server <- function(input, output) {
   })
   
   
+  #output$num_jubs <- renderText()
+  
   output$main_df <- renderTable(
     
     newdata() %>% 
