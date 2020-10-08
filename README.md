@@ -8,3 +8,8 @@ https://stackoverflow.com/jobs/feed
 
 ### Sources
 i.) https://meta.stackoverflow.com/questions/348954/can-i-scrape-stack-overflow-job-postings
+
+
+### To Do
+1.) Build a more robust web application.
+2.) Do a more in-depth analysis of the data.
