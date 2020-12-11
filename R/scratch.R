@@ -3,7 +3,7 @@ library(tidyverse)
 library(tidytext)
 
 #Get Data
-conn <- dbConnect(SQLite(), '../venv/data/jobs_database.db')
+conn <- dbConnect(SQLite(), '../../venv/data/jobs_database.db')
 
 query <- dbSendQuery(conn, "SELECT * FROM main_jobs")
 
@@ -65,20 +65,35 @@ dat %>%
     theme_bw()
 
 # Most common words in job summary
-dat %>%
+word_dat<-
+  dat  %>%
   select(summary) %>%
   mutate(summary = gsub('<.*?>', '', summary)) %>%
   unnest_tokens(word, summary) %>%
   anti_join(tidytext::stop_words, by='word') %>%
   filter(!word  %in% c('nbsp', 'rsquo'))%>%
   count(word) %>%
-  arrange(desc(n)) %>%
+  arrange(desc(n))
+
+
+
+word_dat %>%
   head(25) %>%
   ggplot(aes(reorder(word, n), n))+
     geom_bar(stat = 'identity')+
     labs(x="Word", y="Number Used", 
          title='Most Common Words in Job Description')+
     coord_flip()
+
+bigram_dat <-
+  dat  %>%
+  select(summary) %>%
+  mutate(summary = gsub('<.*?>', '', summary)) %>%
+  unnest_tokens(bigram, summary, token='ngrams', n=2) %>%
+  separate(bigram, into = c('word1', 'word2'), sep=" ")
+
+
+
 
 # Cluster Words
 dtm <- 

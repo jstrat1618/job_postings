@@ -8,7 +8,7 @@ import pandas as pd
 Job = collections.namedtuple("Job", ['id', 'title', 'link', 'location', 'summary'])
 
 
-def parse_feed(url = 'https://stackoverflow.com/jobs/feed'):
+def parse_feed(url='https://stackoverflow.com/jobs/feed'):
     # Allow unverified ssl; what is an ssl?- https://www.digicert.com/ssl/
     if hasattr(ssl, '_create_unverified_context'):
         ssl._create_default_https_context = ssl._create_unverified_context
