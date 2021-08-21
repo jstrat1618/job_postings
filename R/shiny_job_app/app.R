@@ -3,9 +3,12 @@ library(tidyverse)
 library(tidytext)
 library(ggthemes)
 library(RColorBrewer)
+library(scales)
 library(shiny)
 
 
+theme_set(theme_bw(base_size = 20,
+                   base_family = 'Times'))
 
 ui <- shinyUI(
   navbarPage("Jobs Database",
@@ -27,7 +30,9 @@ ui <- shinyUI(
                  
                  # Show a plot of the generated distribution
                  
-                 tabPanel("main_df", tableOutput("main_df"))
+                 tabPanel(
+                   "total_sum", tableOutput("total_sum"),
+                   "First 5 Entries", tableOutput("main_df"))
                )
              ),
              tabPanel("View Data by Location", 
@@ -49,7 +54,7 @@ ui <- shinyUI(
                                       max = 25,
                                       value = 5)),
                         mainPanel(plotOutput("ts_plt")))),
-             tabPanel("Text Analytics",
+             tabPanel("Job Description Analysis",
                       sidebarLayout(
                         sidebarPanel(
                           sliderInput("num_words",
@@ -124,6 +129,11 @@ server <- function(input, output) {
              Location = location, 
              `Date Pulled` = pulled) %>%
       head(input$num_rows)
+  )
+  
+  output$total_sum <- renderTable(
+    data.frame(`Total Postings`=comma(nrow(dat)),  
+               Remaining=comma(nrow(newdata())))
   )
   
   output$city_plt <- renderPlot({
@@ -211,8 +221,7 @@ server <- function(input, output) {
       coord_flip()
     
     
-    
-    print(u_plt)
+     print(u_plt)
     }
   })
   
