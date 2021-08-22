@@ -10,6 +10,8 @@ library(shiny)
 theme_set(theme_bw(base_size = 20,
                    base_family = 'Times'))
 
+toproper <- function(x) paste(toupper(substr(x, 0,1)), substr(tolower(x), 2, nchar(x)), sep='')
+
 ui <- shinyUI(
   navbarPage("Jobs Database",
              tabPanel(
@@ -145,6 +147,7 @@ server <- function(input, output) {
       head(input$num_cities) %>%
       ggplot(aes(reorder(location, n), n))+
       geom_bar(stat='identity')+
+      geom_text(aes(x=reorder(location, n), y=n, label=comma(n)), hjust=-0.5)+
       labs(x = "", y = "Number of Postings", title ='Job Posts by City')+   
       coord_flip()
     
@@ -181,10 +184,12 @@ server <- function(input, output) {
     word_plt <- 
       word_df %>%
       head(input$num_words) %>%
+      mutate(word=toproper(word))%>%
       ggplot(aes(reorder(word, n), n))+
       geom_bar(stat = 'identity')+
       labs(x="", y="Number of Times Used", 
            title='Most Common Words in Job Description')+
+      geom_text(aes(reorder(word, n), n, label=comma(n), hjust=-0.1))+
       coord_flip()
     
     
@@ -214,8 +219,10 @@ server <- function(input, output) {
     u_plt <- 
       udf %>%
       head(input$num_words) %>%
+      mutate(word = toproper(word))%>%
       ggplot(aes(reorder(word, n), n))+
       geom_bar(stat = 'identity')+
+      geom_text(aes(reorder(word, n), n, label=comma(n), hjust=-0.1))+
       labs(x="", y="Number of Times Used", 
            title='')+
       coord_flip()
