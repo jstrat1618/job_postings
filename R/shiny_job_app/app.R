@@ -48,14 +48,8 @@ ui <- shinyUI(
                         mainPanel(plotOutput("city_plt")))),
              
              tabPanel("View Data Over Time",
-                      sidebarLayout(
-                        sidebarPanel(
-                          sliderInput("num_dum",
-                                      "Number of Cities:",
-                                      min = 2,
-                                      max = 25,
-                                      value = 5)),
-                        mainPanel(plotOutput("ts_plt")))),
+        
+                        mainPanel(plotOutput("ts_plt"))),
              tabPanel("Job Description Analysis",
                       sidebarLayout(
                         sidebarPanel(
