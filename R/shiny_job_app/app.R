@@ -4,6 +4,7 @@ library(tidytext)
 library(ggthemes)
 library(RColorBrewer)
 library(scales)
+library(plotly)
 library(shiny)
 
 
@@ -27,15 +28,13 @@ ui <- shinyUI(
                                'Title Contains (Not case sensitive)'),
                    textInput("summary_contains",label = 
                                'Job Summary Contains (Not case sensitive)'),
-                   actionButton('refresh', "Refresh")
+                   actionButton('refresh', "Refresh"),
+                   textOutput('total_sum')
                  ),
                  
                  # Show a plot of the generated distribution
                  
-                 tabPanel(
-                   "total_sum", tableOutput("total_sum"),
-                   "First 5 Entries", tableOutput("main_df"))
-               )
+                 mainPanel(h1('First 5 Entries'), tableOutput("main_df")))
              ),
              tabPanel("View Data by Location", 
                       sidebarLayout(
@@ -127,10 +126,13 @@ server <- function(input, output) {
       head(input$num_rows)
   )
   
-  output$total_sum <- renderTable(
-    data.frame(`Total Postings`=comma(nrow(dat)),  
-               Remaining=comma(nrow(newdata())))
-  )
+  output$total_sum <- renderText({
+    #data.frame(`Total Postings`=comma(nrow(dat)),  Remaining=comma(nrow(newdata())))
+    num_tot <- comma(nrow(dat))
+    num_left <- comma(nrow(newdata()))
+    
+    paste("Total: ", num_tot,". Remaining: ", num_left, ".", sep='')
+    })
   
   output$city_plt <- renderPlot({
     city_plt <- 
