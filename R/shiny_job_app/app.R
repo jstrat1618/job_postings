@@ -34,7 +34,7 @@ ui <- shinyUI(
                  
                  # Show a plot of the generated distribution
                  
-                 mainPanel(h1('First 5 Entries'), tableOutput("main_df")))
+                 mainPanel(h1('First Few Entries'), tableOutput("main_df")))
              ),
              tabPanel("View Data by Location", 
                       sidebarLayout(
@@ -44,7 +44,7 @@ ui <- shinyUI(
                                       min = 2,
                                       max = 25,
                                       value = 5)),
-                        mainPanel(plotOutput("city_plt")))),
+                        mainPanel(plotly::plotlyOutput("city_plt")))),
              
              tabPanel("View Data Over Time",
         
@@ -65,8 +65,8 @@ ui <- shinyUI(
                                       'Enter Word (Not case sensitive)'),
                           textInput("word4",label = 
                                       'Enter Word (Not case sensitive)')),
-                        mainPanel(plotOutput("word_sum_plt"),
-                                  plotOutput("unigram_plt"))))
+                        mainPanel(plotly::plotlyOutput("word_sum_plt"),
+                                  plotlyOutput("unigram_plt"))))
   )
 )
 
@@ -134,18 +134,21 @@ server <- function(input, output) {
     paste("Total: ", num_tot,". Remaining: ", num_left, ".", sep='')
     })
   
-  output$city_plt <- renderPlot({
+  output$city_plt <- plotly::renderPlotly({
     city_plt <- 
       newdata() %>%
       count(location) %>%
       arrange(desc(n)) %>%
       filter(!(location %in% c(',', "", " ")) & !is.na(location)) %>%
       head(input$num_cities) %>%
-      ggplot(aes(reorder(location, n), n))+
+      ggplot(aes(reorder(location, n), n, 
+                 text = paste('City: ',location, '. Number of Postings: ', n, sep='')))+
       geom_bar(stat='identity')+
-      geom_text(aes(x=reorder(location, n), y=n, label=comma(n)), hjust=-0.5)+
+      scale_y_continuous()+
       labs(x = "", y = "Number of Postings", title ='Job Posts by City')+   
       coord_flip()
+    
+    city_plt <- plotly::ggplotly(city_plt, tooltip='text')
     
     print(city_plt)
   })
@@ -163,7 +166,7 @@ server <- function(input, output) {
     print(ts_plt)
   })
   
-  output$word_sum_plt <- renderPlot({
+  output$word_sum_plt <- plotly::renderPlotly({
     word_df <-
       newdata() %>%
       select(summary) %>%
@@ -181,19 +184,19 @@ server <- function(input, output) {
       word_df %>%
       head(input$num_words) %>%
       mutate(word=toproper(word))%>%
-      ggplot(aes(reorder(word, n), n))+
+      ggplot(aes(reorder(word, n), n, 
+                 text=paste('Word: ', word, ". Usage: ", n)))+
       geom_bar(stat = 'identity')+
       labs(x="", y="Number of Times Used", 
            title='Most Common Words in Job Description')+
-      geom_text(aes(reorder(word, n), n, label=comma(n), hjust=-0.1))+
       coord_flip()
     
     
-    
+    word_plt <- ggplotly(word_plt, tooltip='text')
     print(word_plt)
   })
   
-  output$unigram_plt <- renderPlot({
+  output$unigram_plt <- plotly::renderPlotly({
    
     user_words <- tolower(c(input$word1, input$word2, input$word3, input$word4))
     
@@ -216,15 +219,16 @@ server <- function(input, output) {
       udf %>%
       head(input$num_words) %>%
       mutate(word = toproper(word))%>%
-      ggplot(aes(reorder(word, n), n))+
+      ggplot(aes(reorder(word, n), n, 
+                 text=paste('Word: ', word, ". Usage: ", n)))+
       geom_bar(stat = 'identity')+
-      geom_text(aes(reorder(word, n), n, label=comma(n), hjust=-0.1))+
       labs(x="", y="Number of Times Used", 
            title='')+
       coord_flip()
     
+    u_plt <- ggplotly(u_plt, tooltip='text')
     
-     print(u_plt)
+    print(u_plt)
     }
   })
   
